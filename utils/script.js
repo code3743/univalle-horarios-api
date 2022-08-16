@@ -1,18 +1,19 @@
-
-const ordenSemana = [
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes ",
-    "Sábado",
-];
-
-const getTodosLosHorarios = () => {
-    const oferta = $$('#demo>tbody>tr[validrow="true"]');
+const getHorarioSeleccion = (obj) => {
+    const {programaSelecionado, semestreSelecionado} = obj
+    const ordenSemana = [
+        "Lunes",
+        "Martes",
+        "Miércoles",
+        "Jueves",
+        "Viernes ",
+        "Sábado",
+        "N/A"
+    ];
+    const oferta = document.querySelectorAll('#demo>tbody>tr[validrow="true"]');
     const dia = new Array(oferta.length);
     const detalleDia = new Array(14);
     const info = new Array(oferta.length);
+    const arregloTemp = []
 
     oferta.forEach((detalle, index) => {
         detalle.querySelectorAll("td").forEach((e, i) => {
@@ -54,16 +55,14 @@ const getTodosLosHorarios = () => {
             creditos,
         };
     });
-    return info;
-}
-
-const ordenar = (programa, semestre) => {
-    const arregloTemp = []
-    getTodosLosHorarios().forEach((materia) => {
-        if (materia.plan == programa && materia.semestre == semestre) {
+    
+   
+    info.forEach((materia) => {
+        if (materia.plan == programaSelecionado && materia.semestre == semestreSelecionado) {
             arregloTemp.push(materia)
         }
     });
+
     const nuevoOrden = new Array(arregloTemp.length);
     let auxiliar = 0;
     for (let i = 0; i < ordenSemana.length; i++) {
@@ -74,9 +73,10 @@ const ordenar = (programa, semestre) => {
             }
         });
     }
-    return nuevoOrden;
+    return nuevoOrden
 }
 
-module.exports = ordenar;
+
+module.exports = getHorarioSeleccion;
 
 

@@ -1,7 +1,7 @@
 const { response, request } = require('express');
 const { chromium } = require("playwright-chromium");
 const buscarPrograma = require('../utils/programas.util');
-const ordenar = require('../utils/script');
+const getHorarioSeleccion = require('../utils/script');
 
 
 const compararHorarios = async(req = request, res = response)=>{
@@ -12,6 +12,16 @@ const compararHorarios = async(req = request, res = response)=>{
         const semestreASelecionado = parseInt(semestreA);
         const semestreBSelecionado = parseInt(semestreB);
 
+        const paramateroA = {
+            programaSelecionado : programaASelecionado, 
+            semestreSelecionado : semestreASelecionado
+        }
+
+        const paramateroB = {
+            programaSelecionado : programaBSelecionado, 
+            semestreSelecionado : semestreBSelecionado
+        }
+
         const navegador = await chromium.launch({chromiumSandbox: false});
         const pagina = await navegador.newPage();
         await pagina.goto('https://recursostulua.univalle.edu.co/horarios/indexjoomla.php');
@@ -21,15 +31,15 @@ const compararHorarios = async(req = request, res = response)=>{
         });
         await pagina.waitForTimeout(500);
 
-        const resultadoProgramaA = await pagina.evaluate(([programa, semestre]) => ordenar(programa, semestre), [programaASelecionado, semestreASelecionado] );
-        const resultadoProgramaB = await pagina.evaluate(([programa, semestre]) => ordenar(programa, semestre), [programaBSelecionado, semestreBSelecionado] );
+        const resultadoProgramaA = await pagina.evaluate(getHorarioSeleccion, paramateroA );
+        const resultadoProgramaB = await pagina.evaluate(getHorarioSeleccion, paramateroB );
+
+        
 
 
     } catch (error) {
         res.status(500).send(`Algo salio mal: ${error}`);
     }
-
-
 
 }
 
@@ -48,14 +58,13 @@ const getHorario = async(req = request, res = response)=>{
         await pagina.evaluate(()=>{
             document.querySelector('.reset').click();
         });
-        await pagina.waitForTimeout(500);
-        const resultado = await pagina.evaluate(([programa, semestre]) => ordenar(programa, semestre), [programaSelecionado, semestreSelecionado] );
+       
+        const resultado = await pagina.evaluate(getHorarioSeleccion, {programaSelecionado, semestreSelecionado});
 
         await navegador.close();
         res.json({
             resultado
         });
-
 
     } catch (error) {
         res.status(500).send(`Algo salio mal: ${error}`);
