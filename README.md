@@ -1,5 +1,6 @@
 # Horarios API
 
+* Para instalarlo localmente requiere nodejs,ejecutar npm install para los node_modules
 
 API de horarios Universidad del Valle sede Túlua
 
