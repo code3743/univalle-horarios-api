@@ -9,7 +9,7 @@ const compararHorarios = async(req = request, res = response)=>{
     try {
         const programaASelecionado = buscarPrograma(programaA);
         const programaBSelecionado = buscarPrograma(programaB);
-        const semestreASelecionado = parseInt(semestreA);
+        const semestreASelecionado = parseInt(semestreA); 
         const semestreBSelecionado = parseInt(semestreB);
 
         const paramateroA = {
@@ -29,13 +29,12 @@ const compararHorarios = async(req = request, res = response)=>{
         await pagina.evaluate(()=>{
             document.querySelector('.reset').click();
         });
-        await pagina.waitForTimeout(500);
-
         const resultadoProgramaA = await pagina.evaluate(getHorarioSeleccion, paramateroA );
         const resultadoProgramaB = await pagina.evaluate(getHorarioSeleccion, paramateroB );
 
         
-
+        //TODO: Agregar logica del comparacion
+        
 
     } catch (error) {
         res.status(500).send(`Algo salio mal: ${error}`);
